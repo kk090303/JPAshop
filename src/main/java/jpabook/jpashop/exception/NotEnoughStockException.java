@@ -1,7 +1,7 @@
 package jpabook.jpashop.exception;
 
 public class NotEnoughStockException extends RuntimeException {
-    public NotEnoughStockException() {
+    public NotEnoughStockException(String need_more_stock) {
         super();
     }
 
