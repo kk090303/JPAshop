@@ -61,11 +61,12 @@ public class OrderServiceTest {
         //When
         orderService.order(member.getId(), item.getId(), orderCount);
         //Then
+        //위 과정을 통과하고 fail에 도달했다면 재고 수량 예외 처리에 대한 오류 발생
         fail("재고 수량 부족 예외가 발생해야 한다.");
     }
 
     @Test
-    public void 주문취소() {
+    public void 주문취소(){
         //Given
         Member member = createMember();
         Item item = createBook("시골 JPA", 10000, 10); //이름, 가격, 재고
