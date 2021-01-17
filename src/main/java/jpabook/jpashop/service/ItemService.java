@@ -1,6 +1,7 @@
 package jpabook.jpashop.service;
 
 
+import jpabook.jpashop.domain.item.Book;
 import jpabook.jpashop.domain.item.Item;
 import jpabook.jpashop.repository.ItemRepository;
 import lombok.RequiredArgsConstructor;
@@ -28,5 +29,17 @@ public class ItemService {
 
     public Item findOne(Long itemId) {
         return itemRepository.findOne(itemId);
+    }
+
+    //변강 감지 기능 사용을 통한 준영속 엔티티 수정
+    @Transactional
+    public void updateItem(Long itemId, String name, int price, int stockQuantity ) {
+        Item findItem = itemRepository.findOne(itemId);
+        //findItem.change(name,price,stockQuantity);
+        //다음과 같이 메서드를 만들어서 메서드안에서 값을 변경하는 것이 좋다.
+        //역추적하여 어디서 값이 변경되는지 찾기 편하다.
+        findItem.setName(name);
+        findItem.setPrice(price);
+        findItem.setStockQuantity(stockQuantity);
     }
 }
