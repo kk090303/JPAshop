@@ -31,6 +31,7 @@ public class Order {
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "delivery_id")
     private Delivery delivery; //배송정보
+
     private LocalDateTime orderDate; //주문시간
 
     @Enumerated(EnumType.STRING)
@@ -55,7 +56,7 @@ public class Order {
 
     //==생성 메서드==//
     //주문 생성은 복잡하기 때문에 별도의 생성 메서드를 작성하여 진행하는 것이 좋다.
-    //생성 시점 변경을 할 경우 생성 메서드만 변경하면 도니다.
+    //생성 시점 변경을 할 경우 생성 메서드만 변경하면 된다.
     public static Order createOrder(Member member, Delivery delivery, OrderItem... orderItems) {
         Order order = new Order();
         order.setMember(member);
