@@ -95,14 +95,33 @@ public class OrderRepository {
                         " join fetch o.delivery d", Order.class)
                 .getResultList();
     }
+    /*
+    //OrderSimpleApiController의 v4 를 위한 메서드
+    public List<OrderSimpleQueryDto> findOrderDtos() {
+        return em.createQuery(
+                "select new jpabook.jpashop.repository.order.simplequery.OrderSimpleQueryDto(o.id, m.name, o.orderDate, o.status, d.address)" +
+                        " from Order o" +
+                        " join o.member m" +
+                        " join o.delivery d", OrderSimpleQueryDto.class)
+                .getResultList();
+    }
+    */
 
-//    //OrderSimpleApiController의 v4 를 위한 메서드
-//    public List<OrderSimpleQueryDto> findOrderDtos() {
-//        return em.createQuery(
-//                "select new jpabook.jpashop.repository.order.simplequery.OrderSimpleQueryDto(o.id, m.name, o.orderDate, o.status, d.address)" +
-//                        " from Order o" +
-//                        " join o.member m" +
-//                        " join o.delivery d", OrderSimpleQueryDto.class)
-//                .getResultList();
-//    }
+    //OrderApiController V3 : 패치 조인으로 SQL을 한번만 실행하기 위한 메서드
+    // ditinct 를 사용한 이유는 1대다 조인이 있으므로 데이터베이스 row가 증가한다.
+    // 그 결과 같은 order 엔티티의 조회 수도 증가하게 된다.
+    // JPA의 distinct는 SQL에 distinct를 추가하고, 더해서 같은 엔티티가 조회되면, 애플리케이션에서 중복을 걸러준다.
+    // 이 메서드에서 order가 컬랙션 페치 조인 때문에 중복 조회 되는 것을 막아준다.
+    // 단점 = 페이징 불가능(페이징 쿼리 사용 불가능) (ex> setFirstResult(1) , setMaxResults(100). getResultList())
+    // 단점의 이유 = 1대다 조인을 하면 order의 기준이 틀어지게 되기 때문에 order을 기준으로 페이징이 불가능함
+    public List<Order> findAllWithItem() {
+        return em.createQuery(
+                "select distinct o from Order o" +
+                        " join fetch o.member m" +
+                        " join fetch o.delivery d" +
+                        " join fetch o.orderItems oi" +
+                        " join fetch oi.item i", Order.class)
+                .getResultList();
+    }
+
 }
