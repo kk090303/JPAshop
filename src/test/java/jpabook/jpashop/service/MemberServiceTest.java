@@ -19,7 +19,7 @@ public class MemberServiceTest {
     @Autowired
     MemberService memberService;
     @Autowired
-    MemberRepository memberRepository;
+    MemberRepository memberRepositoryOld;
 
     @Test
     public void 회원가입() throws Exception {
@@ -29,7 +29,7 @@ public class MemberServiceTest {
          //When
         Long saveId = memberService.join(member);
          //Then
-        assertEquals(member, memberRepository.findOne(saveId));
+        assertEquals(member, memberRepositoryOld.findOne(saveId));
     }
 
     @Test(expected = IllegalStateException.class) //예외 발생시 IllegalStateException이어야 한다.
